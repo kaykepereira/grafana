@@ -4,13 +4,13 @@ import _ from 'lodash';
 // Services & Utils
 import syntax, {
   QUERY_COMMANDS,
-  FUNCTIONS,
   AGGREGATION_FUNCTIONS_STATS,
   STRING_FUNCTIONS,
   DATETIME_FUNCTIONS,
   IP_FUNCTIONS,
   BOOLEAN_FUNCTIONS,
   NUMERIC_OPERATORS,
+  FIELD_AND_FILTER_FUNCTIONS,
 } from './syntax';
 
 // Types
@@ -210,7 +210,7 @@ export class CloudWatchLanguageProvider extends LanguageProvider {
 
     if (['display', 'fields'].includes(queryCommand)) {
       const typeaheadOutput = await this.getFieldCompletionItems(context.logGroupNames ?? []);
-      typeaheadOutput.suggestions.push(...this.getFunctionCompletionItems().suggestions);
+      typeaheadOutput.suggestions.push(...this.getFieldAndFilterFunctionCompletionItems().suggestions);
 
       return typeaheadOutput;
     }
@@ -275,8 +275,8 @@ export class CloudWatchLanguageProvider extends LanguageProvider {
     return { suggestions: [{ prefixMatch: true, label: 'Commands', items: QUERY_COMMANDS }] };
   };
 
-  private getFunctionCompletionItems = (): TypeaheadOutput => {
-    return { suggestions: [{ prefixMatch: true, label: 'Functions', items: FUNCTIONS }] };
+  private getFieldAndFilterFunctionCompletionItems = (): TypeaheadOutput => {
+    return { suggestions: [{ prefixMatch: true, label: 'Functions', items: FIELD_AND_FILTER_FUNCTIONS }] };
   };
 
   private getStatsAggCompletionItems = (): TypeaheadOutput => {
